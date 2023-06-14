@@ -13,9 +13,10 @@ public class Reaction {
     public var imageName:String!
     public var tag: Int?
     
-    public init(title: String, imageName: String) {
+    public init(title: String, imageName: String, tag: Int?) {
         self.title = title
         self.imageName = imageName
+        self.tag = tag
     }
 }
 

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public protocol FacebookLikeReactionDelegate {
-    func selectedReaction(reaction: Reaction)
+    func selectedReaction(reaction: Reaction, currentIndex: Int)
 }
 
 public class ReactionView: UIView {
@@ -18,6 +18,7 @@ public class ReactionView: UIView {
     var sourceView: UIView!
     var gestureView: UIView!
     var reactions: [Reaction]!
+    public var currentIndex : Int = 0
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,6 +34,51 @@ public class ReactionView: UIView {
     }
     
     public func initialize(delegate: UIViewController, reactionsArray: [Reaction], sourceView: UIView, gestureView: UIView) {
+        let iconHeight: CGFloat = 35
+        let padding: CGFloat = 8
+        self.reactions = reactionsArray
+        self.sourceView = sourceView
+        self.gestureView = gestureView
+        self.delegate = delegate as? FacebookLikeReactionDelegate
+        
+        var imgs: [UIImage] = []
+        
+        var arrangedSubviews: [UIView] = []
+        
+        for (index, reaction) in reactions.enumerated() {
+            imgs.append(UIImage(named: reaction.imageName!)!)
+            
+            let imgView = UIImageView(image: UIImage(named: reaction.imageName!)!)
+            imgView.isUserInteractionEnabled = true
+            imgView.frame = CGRect(x: 0, y: 0, width: iconHeight, height: iconHeight)
+            imgView.layer.cornerRadius = (imgView.frame.height) / 2
+            imgView.layer.masksToBounds = true
+            imgView.layer.borderColor = UIColor.clear.cgColor
+            imgView.layer.borderWidth = 0
+            imgView.contentMode = .scaleAspectFit
+            imgView.tag = index
+            reactions[index].tag = index
+            arrangedSubviews.append(imgView)
+        }
+        
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.distribution = .fillEqually
+        stackView.spacing = padding
+        stackView.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        
+        let width = (CGFloat(imgs.count) * iconHeight) + (CGFloat(imgs.count+1) * padding)
+        self.frame = CGRect(x: 0, y: 0, width: width, height: iconHeight + 2 * padding)
+        layer.cornerRadius = frame.height/2
+        addSubview(stackView)
+        stackView.frame = frame
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        gestureView.addGestureRecognizer(longPressGesture)
+        
+    }
+    
+    public func initializeWithCell(delegate: UIView, reactionsArray: [Reaction], sourceView: UIView, gestureView: UIView) {
         let iconHeight: CGFloat = 35
         let padding: CGFloat = 8
         self.reactions = reactionsArray
@@ -174,7 +220,7 @@ public class ReactionView: UIView {
         let fixedYlocation = CGPoint(x: point.x, y: point.y > 15 ? (self.frame.height / 2)  : point.y)
         let hitTestview = self.hitTest(fixedYlocation, with: nil)
         if hitTestview is UIImageView {
-            self.delegate.selectedReaction(reaction: self.reactions[hitTestview!.tag])
+            self.delegate.selectedReaction(reaction: self.reactions[hitTestview!.tag], currentIndex: self.currentIndex)
         }
         resetIconContainer()
     }
