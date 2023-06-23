@@ -74,7 +74,7 @@ public class ReactionView: UIView {
         stackView.frame = frame
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        longPressGesture.minimumPressDuration = 0.5
+//        longPressGesture.minimumPressDuration = 0.5
         gestureView.addGestureRecognizer(longPressGesture)
         
     }
