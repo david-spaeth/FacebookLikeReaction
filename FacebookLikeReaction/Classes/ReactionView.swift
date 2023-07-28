@@ -57,7 +57,7 @@ public class ReactionView: UIView {
             imgView.layer.borderWidth = 0
             imgView.contentMode = .scaleAspectFit
             imgView.tag = index
-            reactions[index].tag = index
+            //reactions[index].tag = index
             arrangedSubviews.append(imgView)
         }
         
@@ -103,7 +103,7 @@ public class ReactionView: UIView {
             imgView.layer.borderWidth = 0
             imgView.contentMode = .scaleAspectFit
             imgView.tag = index
-            reactions[index].tag = index
+           //reactions[index].tag = index
             arrangedSubviews.append(imgView)
         }
         
@@ -141,14 +141,13 @@ public class ReactionView: UIView {
     
     public func showViewWithAnimation(at point: CGPoint, in view: UIView) {
         alpha = 0
-        //        let centerX = (view.frame.width + (80 * _widthRatio) - self.frame.width)/2
-        let centerX = view.frame.maxX - self.frame.width - (80)
+          let centerX = view.frame.maxX - self.frame.width - 10
         transform = CGAffineTransform(translationX: centerX, y: point.y)
         
         // Change Alpha to visible
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.alpha = 1
-            self.transform = CGAffineTransform(translationX: centerX, y: point.y - 80)
+            self.transform = CGAffineTransform(translationX: centerX, y: point.y - 70)
         }) { (_) in
             let lbl = UILabel()
             lbl.frame = CGRect(x: 7.5, y: 3 , width: lbl.frame.width + 10, height: 23)
